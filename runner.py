@@ -7,12 +7,14 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         player_walk_1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_walk_2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
-        self.player_walk = [player_walk_1, player_walk_2]
+        player_walk_3 = pygame.image.load('graphics/Player/player_walk_3.png').convert_alpha()
+        player_walk_4 = pygame.image.load('graphics/Player/player_walk_4.png').convert_alpha()
+        self.player_walk = [player_walk_1, player_walk_2, player_walk_3, player_walk_4]
         self.player_index = 0
         self.player_jump = pygame.image.load('graphics/Player/jump.png').convert_alpha()
 
         self.image = self.player_walk[self.player_index]
-        self.rect = self.image.get_rect(midbottom = (80, 300))
+        self.rect = self.image.get_rect(midbottom = (80, 320))
         self.gravity = 0
 
         self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
@@ -20,17 +22,17 @@ class Player(pygame.sprite.Sprite):
 
     def player_input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 320:
             self.gravity = -20
             self.jump_sound.play()
 
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= 300: self.rect.bottom = 300
+        if self.rect.bottom >= 320: self.rect.bottom = 320
 
     def animation_state(self):
-        if self.rect.bottom < 300: 
+        if self.rect.bottom < 320: 
             self.image = self.player_jump
         else: 
             self.player_index += 0.1
@@ -51,11 +53,17 @@ class Obstacle(pygame.sprite.Sprite):
             fly_2 = pygame.image.load('graphics/Fly/Fly2.png').convert_alpha()
             self.frames = [fly_1, fly_2]
             y_pos = 210
+
+        elif type == 'moushroom':
+            moushroom_1 = pygame.image.load('graphics/moushroom/moushroom1.png').convert_alpha()
+            moushrrom_2 = pygame.image.load('graphics/moushroom/moushroom2.png').convert_alpha()
+            self.frames = [moushroom_1, moushrrom_2]
+            y_pos = 320
         else:
             snail_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
             snail_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
             self.frames = [snail_1, snail_2]
-            y_pos = 300
+            y_pos = 320
 
         self.obstacle_index = 0
         self.image = self.frames[self.obstacle_index]
@@ -143,7 +151,7 @@ while True:
 
         if game_active:
             if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['fly', 'snail', 'snail'])))
+                obstacle_group.add(Obstacle(choice(['fly', 'moushroom', 'snail'])))
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
@@ -152,9 +160,9 @@ while True:
 
     if game_active: 
         screen.blit(sky_surface, (0,0))
-        screen.blit(ground_surface, (0, 300))
-        pygame.draw.rect(screen, '#c0e8ec', score_rect)
-        pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
+        screen.blit(ground_surface, (0, 320))
+        pygame.draw.rect(screen, '#64cb99', score_rect)
+        pygame.draw.rect(screen, '#64cb99', score_rect, 10)
     
         score = display_score()
         
